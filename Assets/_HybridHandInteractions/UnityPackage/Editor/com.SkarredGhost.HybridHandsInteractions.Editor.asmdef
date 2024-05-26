@@ -1,0 +1,19 @@
+{
+    "name": "com.SkarredGhost.HybridHandsInteractions",
+    "rootNamespace": "",
+    "references": [
+        "GUID:43e9109b8cf6eec438823b2311391706",
+        "GUID:e073169f26aeb1c4cbbc5f126af030c7"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
