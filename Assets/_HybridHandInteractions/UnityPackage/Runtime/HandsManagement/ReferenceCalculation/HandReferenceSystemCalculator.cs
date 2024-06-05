@@ -71,7 +71,6 @@ namespace HybridHandInteractions
         /// Callback for when the hand joints are updated
         /// </summary>
         /// <param name="handJointsEventArgs">Data about the updated joints</param>
-        /// <exception cref="NotImplementedException"></exception>
         private void HandJointsUpdated(XRHandJointsUpdatedEventArgs handJointsEventArgs)
         {
             //update all transforms with the new tracking data of the joints

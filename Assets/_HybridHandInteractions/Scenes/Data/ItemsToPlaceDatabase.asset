@@ -12,9 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43da3a5b4afb2a243bf44dc9f464d952, type: 3}
   m_Name: ItemsToPlaceDatabase
   m_EditorClassIdentifier: 
-  <Items>k__BackingField:
-    ItemsToPlace:
-    - <ItemObject>k__BackingField: {fileID: 8782443023392680043, guid: c32cce0adf8e58140887a250a47127f3, type: 3}
-      <ItemName>k__BackingField: Cube
-    - <ItemObject>k__BackingField: {fileID: 7088586621316388591, guid: c9c8b389a89adbe4e9a06d091a495d5c, type: 3}
-      <ItemName>k__BackingField: Cylinder
+  m_itemsToPlace:
+  - <ItemName>k__BackingField: CubeGrab
+    <PlaceableItemObject>k__BackingField: {fileID: 8782443023392680043, guid: c32cce0adf8e58140887a250a47127f3, type: 3}
+    <SpawnableItemObject>k__BackingField: {fileID: 7217366773681024504, guid: 9e64b31ae86582e48a2463f94f6f8bd1, type: 3}
+  - <ItemName>k__BackingField: CubeSlide
+    <PlaceableItemObject>k__BackingField: {fileID: 8782443023392680043, guid: c32cce0adf8e58140887a250a47127f3, type: 3}
+    <SpawnableItemObject>k__BackingField: {fileID: 7217366773681024504, guid: 75501c64513a10b4e816302b0fa18f17, type: 3}
+  - <ItemName>k__BackingField: CubeTouch
+    <PlaceableItemObject>k__BackingField: {fileID: 8782443023392680043, guid: c32cce0adf8e58140887a250a47127f3, type: 3}
+    <SpawnableItemObject>k__BackingField: {fileID: 7217366773681024504, guid: af2d3aa3589f1f94abe10a10454f0fab, type: 3}
+  - <ItemName>k__BackingField: Cylinder
+    <PlaceableItemObject>k__BackingField: {fileID: 7088586621316388591, guid: c9c8b389a89adbe4e9a06d091a495d5c, type: 3}
+    <SpawnableItemObject>k__BackingField: {fileID: 0}

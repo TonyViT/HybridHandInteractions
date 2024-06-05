@@ -15,7 +15,8 @@ namespace HybridHandInteractions
         {
             MainMenu,
             PlacingObject,
-            SavingObjects
+            SavingObjects,
+            LoadingObjects
         };
 
         /// <summary>
@@ -41,6 +42,29 @@ namespace HybridHandInteractions
         /// </summary>
         [SerializeField]
         private ObjectPlacementSavingPresenter m_objectPlacementSavingPresenter;
+
+        /// <summary>
+        /// The presenter that controls the UI for the object placement loading
+        /// </summary>
+        [SerializeField]
+        private ObjectPlacementLoadingPresenter m_objectPlacementLoadingPresenter;
+
+        /// <summary>
+        /// If not null, the presenter will hide a gameobject (probaably itself or its parent) when the finalization of the items is done.
+        /// It is useful to let the user see the scene without the UI when the items are finalized.
+        /// </summary>
+        [SerializeField]
+        private GameObject m_hideOnFinalizationGo;
+
+        /// <summary>
+        /// If true, the presenter will start with the loading state, otherwise it will start with the main menu state.
+        /// </summary>
+        /// <remarks>
+        /// It is suggested to start with the loading state if the presenter is used to load items at the beginning of the scene
+        /// when the placement happened in a previous scene
+        /// </remarks>
+        [SerializeField]
+        private bool m_startWithLoading = false;
 
         /// <summary>
         /// Interface for the objects placement manager.
@@ -85,7 +109,8 @@ namespace HybridHandInteractions
             {
                 m_managerUiPresenter.gameObject,
                 m_objectPlacementInProgressPresenter.gameObject,
-                m_objectPlacementSavingPresenter.gameObject
+                m_objectPlacementSavingPresenter.gameObject,
+                m_objectPlacementLoadingPresenter.gameObject
             };
         }
 
@@ -95,9 +120,18 @@ namespace HybridHandInteractions
         private void OnEnable()
         {
             m_managerUiPresenter.SaveItemsSelected += OnSaveItemsSelected;
-            m_objectsPlacementManager.ObjectPlacer.ObjectPlacementStarted += OnItemPlacementStarted;
-            m_objectsPlacementManager.ObjectPlacer.ObjectPlacementEnded += OnItemPlacementEnded;
+            m_managerUiPresenter.LoadItemsSelected += OnLoadItemsSelected;
+            m_managerUiPresenter.FinalizeItemsSelected += OnFinalizeItemsSelected;
+            
+            if (m_objectsPlacementManager.ObjectPlacer != null)
+            {
+                m_objectsPlacementManager.ObjectPlacer.ObjectPlacementStarted += OnItemPlacementStarted;
+                m_objectsPlacementManager.ObjectPlacer.ObjectPlacementEnded += OnItemPlacementEnded;
+            }
+
             m_objectPlacementSavingPresenter.SaveItemsSelected += OnSaveFinalizationButtonClicked;
+            m_objectPlacementLoadingPresenter.LoadItemsSelected += OnLoadFinalizationButtonClicked;        
+            m_objectPlacementLoadingPresenter.FinalizeItemsSelected += OnFinalizeItemsSelected;
         }
 
         /// <summary>
@@ -106,9 +140,18 @@ namespace HybridHandInteractions
         private void OnDisable()
         {
             m_managerUiPresenter.SaveItemsSelected -= OnSaveItemsSelected;
-            m_objectsPlacementManager.ObjectPlacer.ObjectPlacementStarted -= OnItemPlacementStarted;
-            m_objectsPlacementManager.ObjectPlacer.ObjectPlacementEnded -= OnItemPlacementEnded;
+            m_managerUiPresenter.LoadItemsSelected -= OnLoadItemsSelected;
+            m_managerUiPresenter.FinalizeItemsSelected -= OnFinalizeItemsSelected;
+
+            if (m_objectsPlacementManager.ObjectPlacer != null)
+            {
+                m_objectsPlacementManager.ObjectPlacer.ObjectPlacementStarted -= OnItemPlacementStarted;
+                m_objectsPlacementManager.ObjectPlacer.ObjectPlacementEnded -= OnItemPlacementEnded;
+            }
+
             m_objectPlacementSavingPresenter.SaveItemsSelected -= OnSaveFinalizationButtonClicked;
+            m_objectPlacementLoadingPresenter.LoadItemsSelected -= OnLoadFinalizationButtonClicked;
+            m_objectPlacementLoadingPresenter.FinalizeItemsSelected -= OnFinalizeItemsSelected;
         }
 
         /// <summary>
@@ -119,15 +162,35 @@ namespace HybridHandInteractions
             m_managerUiPresenter.Init(m_objectsPlacementManager);
             m_objectPlacementInProgressPresenter.Init(m_objectsPlacementManager.ObjectPlacer);
             m_objectPlacementSavingPresenter.Init(m_objectsPlacementManager);
-            CurrentState = State.MainMenu;
+            m_objectPlacementLoadingPresenter.Init(m_objectsPlacementManager);
+            CurrentState = m_startWithLoading ? State.LoadingObjects : State.MainMenu;
         }
 
         /// <summary>
-        /// Method called when the user selects to save the items
+        /// Method called when the user selects that he wants to open the tab to save the items
         /// </summary>
         private void OnSaveItemsSelected()
         {
             CurrentState = State.SavingObjects;
+        }
+
+        /// <summary>
+        /// Method called when the user selects that he wants to open the tab to load the items
+        /// </summary>
+        private void OnLoadItemsSelected()
+        {
+            CurrentState = State.LoadingObjects;
+        }
+
+        /// <summary>
+        /// Method called when the user selects that he wants to finalize the current items
+        /// </summary>
+        private void OnFinalizeItemsSelected()
+        {
+            m_objectsPlacementManager.FinalizePlacedItems();
+
+            if (m_hideOnFinalizationGo != null)
+                m_hideOnFinalizationGo.SetActive(false);
         }
 
         /// <summary>
@@ -152,6 +215,14 @@ namespace HybridHandInteractions
         /// Method called when the user confirms the finalization of the saving of the items
         /// </summary>
         private void OnSaveFinalizationButtonClicked()
+        {
+            CurrentState = State.MainMenu;
+        }
+
+        /// <summary>
+        /// Method called when the user confirms the finalization of the loading of the items
+        /// </summary>
+        private void OnLoadFinalizationButtonClicked()
         {
             CurrentState = State.MainMenu;
         }

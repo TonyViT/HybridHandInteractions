@@ -9,9 +9,14 @@ namespace HybridHandInteractions
     public class ItemsToPlaceDatabase : ScriptableObject
     {
         /// <summary>
+        /// The items that can be placed in the scene (and can be eventually spawned in a different way)
+        /// </summary>
+        [SerializeField]
+        private PlaceableSpawnableItem[] m_itemsToPlace;
+
+        /// <summary>
         /// The items that can be placed in the scene
         /// </summary>
-        [field: SerializeField]
-        public ItemsToPlaceData Items { get; private set; }
+        public ItemsToPlaceData Items => new ItemsToPlaceData() { ItemsToPlace = m_itemsToPlace };
     }
 }

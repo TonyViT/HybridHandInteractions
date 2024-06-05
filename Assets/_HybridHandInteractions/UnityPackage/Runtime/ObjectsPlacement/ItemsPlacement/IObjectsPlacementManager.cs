@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using UnityEngine;
 using UnityEngine.XR.ARSubsystems;
 
 namespace HybridHandInteractions
@@ -26,7 +25,8 @@ namespace HybridHandInteractions
         List<IPlaceableItem> PlacedItems { get; }
 
         /// <summary>
-        /// Object placer that will place the objects in the scene
+        /// Object placer that will place the objects in the scene.
+        /// It can be null if we don't want to place the objects in the scene, but just load previously placed objects
         /// </summary>
         IObjectPlacer ObjectPlacer { get; }
 
@@ -47,11 +47,28 @@ namespace HybridHandInteractions
         void RemoveLastItem();
 
         /// <summary>
+        /// Performs the finalization of the placed items, so the user can proceed to interact with them
+        /// </summary>
+        /// <remarks>
+        /// All the placed elements will be permanently placed in the scene and the list of in-progress-placement items will be cleared.
+        /// </remarks>
+        void FinalizePlacedItems();
+
+        /// <summary>
         /// Serialize the placed items in the scene.
         /// </summary>
         /// <param name="referencePlaneClassification">Reference plane (if any) for the positioning of the items. If specified, all the pose of the elements
         /// to serialize will be specified as relative to this plane. For more info check the documentation of <see cref="PlacedItemDto"/></param>
         /// <returns>String representation of the list of placed items</returns>
         string Serialize(PlaneClassification referencePlaneClassification);
+
+        /// <summary>
+        /// Deserialize the list of placed items from a previous session
+        /// </summary>
+        /// <remarks>
+        /// This function deletes the list of currently placed items and substitutes it with the deserialized one
+        /// </remarks>
+        /// <param name="serializedPlacedObjects">String produced by the <see cref="Serialize"/> function with the serialization of a list of elements</param>
+        void Deserialize(string serializedPlacedObjects);
     }
 }

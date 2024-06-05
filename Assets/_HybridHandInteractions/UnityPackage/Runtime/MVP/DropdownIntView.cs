@@ -24,22 +24,28 @@ namespace HybridHandInteractions
         {
             get
             {
-                //sometimes this gets called on disabled gameobjects so before Awake is called,
-                //so we need to get the reference to the dropdown if it is null
-                if (m_dropdown == null)
-                    m_dropdown = GetComponent<TMP_Dropdown>();
-
-                return m_dropdown.options.ConvertAll(option => option.text);
+                return Dropdown.options.ConvertAll(option => option.text);
             }   
             set
+            {
+                Dropdown.ClearOptions();
+                Dropdown.AddOptions(value);
+            }
+        }
+
+        /// <summary>
+        /// Get the dropdown associated with this component
+        /// </summary>
+        private TMP_Dropdown Dropdown
+        {
+            get
             {
                 //sometimes this gets called on disabled gameobjects so before Awake is called,
                 //so we need to get the reference to the dropdown if it is null
                 if (m_dropdown == null)
                     m_dropdown = GetComponent<TMP_Dropdown>();
 
-                m_dropdown.ClearOptions();
-                m_dropdown.AddOptions(value);
+                return m_dropdown;
             }
         }
 
@@ -56,7 +62,7 @@ namespace HybridHandInteractions
         /// </summary>
         private void OnEnable()
         {
-            m_dropdown.onValueChanged.AddListener(OnDropdownValueChanged);
+            Dropdown.onValueChanged.AddListener(OnDropdownValueChanged);
         }
 
         /// <summary>
@@ -64,7 +70,7 @@ namespace HybridHandInteractions
         /// </summary>
         private void OnDisable()
         {
-            m_dropdown.onValueChanged.RemoveListener(OnDropdownValueChanged);
+            Dropdown.onValueChanged.RemoveListener(OnDropdownValueChanged);
         }
 
         /// <summary>
@@ -83,7 +89,7 @@ namespace HybridHandInteractions
         /// <inheritdoc/>
         protected override void OnValueChanged(int oldValue, int newValue)
         {
-            m_dropdown.value = newValue;
+            Dropdown.value = newValue;
         }
     }
 }

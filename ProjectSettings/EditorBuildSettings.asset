@@ -5,9 +5,12 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/_HybridHandInteractions/Scenes/HandPlacementSampleScene.unity
     guid: 075377bd9bc925e43ae16349833d5099
+  - enabled: 1
+    path: Assets/_HybridHandInteractions/Scenes/HandInteractionSampleScene.unity
+    guid: 41bc4a6a22fe58446b9a2861cdc8fd8a
   m_configObjects:
     com.unity.xr.arfoundation.simulation_settings: {fileID: 11400000, guid: 21e146dc77c60b9458212bbdbf41a981, type: 2}
     com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 300cc7ba0b720e246a5461d1db736841, type: 2}

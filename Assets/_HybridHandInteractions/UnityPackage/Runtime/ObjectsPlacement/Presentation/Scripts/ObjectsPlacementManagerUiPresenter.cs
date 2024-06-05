@@ -52,6 +52,18 @@ namespace HybridHandInteractions
         private ButtonView m_saveItemsButton;
 
         /// <summary>
+        /// Button view for saving items.
+        /// </summary>
+        [SerializeField]
+        private ButtonView m_loadItemsButton;
+
+        /// <summary>
+        /// Button view for finalize items.
+        /// </summary>
+        [SerializeField]
+        private ButtonView m_finalizeItemsButton;
+
+        /// <summary>
         /// Interface for the objects placement manager.
         /// </summary>
         private IObjectsPlacementManager m_objectsPlacementManager;
@@ -60,6 +72,16 @@ namespace HybridHandInteractions
         /// Event called when the user selects to save the items
         /// </summary>
         public Action SaveItemsSelected;
+
+        /// <summary>
+        /// Event called when the user selects to load the items
+        /// </summary>
+        public Action LoadItemsSelected;
+
+        /// <summary>
+        /// Event called when the user selects to finalize the items
+        /// </summary>
+        public Action FinalizeItemsSelected;
 
         /// <summary>
         /// Initialize this presenter
@@ -73,8 +95,11 @@ namespace HybridHandInteractions
             m_itemsDropdown.Options = m_objectsPlacementManager.ItemsToPlace.ItemsToPlace.Select(item => item.ItemName).ToList();
 
             //initialize the toggle views with the current values of the options
-            m_alignWithPlaneToggle.Value = m_objectsPlacementManager.ObjectPlacer.Options.AlignWithPlane;
-            m_avoidCompenetrationToggle.Value = m_objectsPlacementManager.ObjectPlacer.Options.AvoidCompenetration;
+            if (m_objectsPlacementManager.ObjectPlacer != null)
+            {
+                m_alignWithPlaneToggle.Value = m_objectsPlacementManager.ObjectPlacer.Options.AlignWithPlane;
+                m_avoidCompenetrationToggle.Value = m_objectsPlacementManager.ObjectPlacer.Options.AvoidCompenetration;
+            }
         }
 
         /// <summary>
@@ -90,6 +115,8 @@ namespace HybridHandInteractions
             m_removeLastItemButton.Clicked += OnRemoveLastItemClicked;
             m_clearItemsButton.Clicked += OnClearItemsClicked;
             m_saveItemsButton.Clicked += OnSaveItemsClicked;
+            m_loadItemsButton.Clicked += OnLoadItemsClicked;
+            m_finalizeItemsButton.Clicked += OnFinalizeItemsClicked;
         }
 
         /// <summary>
@@ -105,6 +132,8 @@ namespace HybridHandInteractions
             m_removeLastItemButton.Clicked -= OnRemoveLastItemClicked;
             m_clearItemsButton.Clicked -= OnClearItemsClicked;
             m_saveItemsButton.Clicked -= OnSaveItemsClicked;
+            m_loadItemsButton.Clicked -= OnLoadItemsClicked;
+            m_finalizeItemsButton.Clicked -= OnFinalizeItemsClicked;
         }
 
         /// <summary>
@@ -122,7 +151,8 @@ namespace HybridHandInteractions
         /// <param name="value">New value of the option</param>
         private void OnAvoidCompenetrationChangedByUser(bool value)
         {
-            m_objectsPlacementManager.ObjectPlacer.Options.AvoidCompenetration = value;
+            if (m_objectsPlacementManager.ObjectPlacer != null)
+                m_objectsPlacementManager.ObjectPlacer.Options.AvoidCompenetration = value;
         }
 
         /// <summary>
@@ -131,7 +161,8 @@ namespace HybridHandInteractions
         /// <param name="value">New value of the option</param>
         private void OnAlignWithPlaneChangedByUser(bool value)
         {
-            m_objectsPlacementManager.ObjectPlacer.Options.AlignWithPlane = value;
+            if (m_objectsPlacementManager.ObjectPlacer != null)
+                m_objectsPlacementManager.ObjectPlacer.Options.AlignWithPlane = value;
         }
 
         /// <summary>
@@ -164,6 +195,22 @@ namespace HybridHandInteractions
         private void OnSaveItemsClicked()
         {
             SaveItemsSelected?.Invoke();
+        }
+
+        /// <summary>
+        /// Method called when the user clicks on the load items button
+        /// </summary>
+        private void OnLoadItemsClicked()
+        {
+            LoadItemsSelected?.Invoke();
+        }
+
+        /// <summary>
+        /// Method called when the user clicks on the finalize items button
+        /// </summary>
+        private void OnFinalizeItemsClicked()
+        {
+            FinalizeItemsSelected?.Invoke();
         }
 
     }

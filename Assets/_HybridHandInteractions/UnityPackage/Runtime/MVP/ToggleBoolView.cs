@@ -13,6 +13,22 @@ namespace HybridHandInteractions
         private Toggle m_toggle;
 
         /// <summary>
+        /// Get the dropdown associated with this component
+        /// </summary>
+        private Toggle Toggle
+        {
+            get
+            {
+                //sometimes this gets called on disabled gameobjects so before Awake is called,
+                //so we need to get the reference to the dropdown if it is null
+                if (m_toggle == null)
+                    m_toggle = GetComponent<Toggle>();
+
+                return m_toggle;
+            }
+        }
+
+        /// <summary>
         /// Awake
         /// </summary>
         private void Awake()
@@ -25,7 +41,7 @@ namespace HybridHandInteractions
         /// </summary>
         private void OnEnable()
         {
-            m_toggle.onValueChanged.AddListener(OnToggleValueChangedByUser);
+            Toggle.onValueChanged.AddListener(OnToggleValueChangedByUser);
         }
 
         /// <summary>
@@ -33,13 +49,13 @@ namespace HybridHandInteractions
         /// </summary>
         private void OnDisable()
         {
-            m_toggle.onValueChanged.RemoveListener(OnToggleValueChangedByUser);
+            Toggle.onValueChanged.RemoveListener(OnToggleValueChangedByUser);
         }
 
         /// <inheritdoc />
         protected override void OnValueChanged(bool oldValue, bool newValue)
         {
-            m_toggle.isOn = newValue;
+            Toggle.isOn = newValue;
         }
 
         /// <summary>

@@ -1,4 +1,5 @@
 using System;
+using System.Data;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
@@ -78,17 +79,43 @@ namespace HybridHandInteractions
                 referencePlane = planesManager.GetFirstPlaneOfTypeOrDefault(referencePlaneClassification);
 
             //compute the position, rotation and scale of the item either as absolute or relative to the reference plane
-            Vector3 position = referencePlane == null ? item.ItemObject.transform.position : referencePlane.transform.InverseTransformPoint(item.ItemObject.transform.position);
-            Quaternion rotation = referencePlane == null ? item.ItemObject.transform.rotation : Quaternion.Inverse(referencePlane.transform.rotation) * item.ItemObject.transform.rotation;
-            Vector3 scale = item.ItemObject.transform.localScale;
+            Vector3 position = referencePlane == null ? item.PlaceableItemObject.transform.position : referencePlane.transform.InverseTransformPoint(item.PlaceableItemObject.transform.position);
+            Quaternion rotation = referencePlane == null ? item.PlaceableItemObject.transform.rotation : Quaternion.Inverse(referencePlane.transform.rotation) * item.PlaceableItemObject.transform.rotation;
+            Vector3 scale = item.PlaceableItemObject.transform.localScale;
 
             //set the properties of the DTO
             ItemName = item.ItemName;
             Position = new float[] { position.x, position.y, position.z };
             Rotation = new float[] { rotation.x, rotation.y, rotation.z, rotation.w };
             Scale = new float[] { scale.x, scale.y, scale.z };
-            ReferencePlanceClassification = referencePlane != null ? referencePlane.classification : PlaneClassification.None; //if we did not find the plane,
-                                                                                                                               //the reference is absolute, even if the user asked to have a reference plane
+            ReferencePlanceClassification = referencePlane != null ? referencePlane.classification : PlaneClassification.None; //if we did not find the plane,                                                                                                                             //the reference is absolute, even if the user asked to have a reference plane
+        }
+
+        /// <summary>
+        /// Fills the provided item with the data from this DTO.
+        /// </summary>
+        /// <param name="item">The item to be filled with data.</param>
+        /// <param name="planesManager">The ARPlaneManager that manages the list of existing planes.</param>
+        /// <exception cref="InvalidOperationException">Thrown when the reference plane of the specified type is not found in the scene.</exception>
+        public void FillItem(IPlaceableItem item, ARPlaneManager planesManager)
+        {
+            //get the reference plane
+            ARPlane referencePlane = null;
+
+            if (ReferencePlanceClassification != PlaneClassification.None)
+            {
+                referencePlane = planesManager.GetFirstPlaneOfTypeOrDefault(ReferencePlanceClassification);
+
+                //check if the reference plane is found
+                if (referencePlane == null)
+                    throw new InvalidOperationException ($"The reference plane of type {ReferencePlanceClassification} was not found in the scene, but was needed for the object set up");
+            }
+
+            //fill the item with the data
+            item.ItemName = ItemName;
+            item.PlaceableItemObject.transform.position = referencePlane == null ? new Vector3(Position[0], Position[1], Position[2]) : referencePlane.transform.TransformPoint(new Vector3(Position[0], Position[1], Position[2]));
+            item.PlaceableItemObject.transform.rotation = referencePlane == null ? new Quaternion(Rotation[0], Rotation[1], Rotation[2], Rotation[3]) : referencePlane.transform.rotation * new Quaternion(Rotation[0], Rotation[1], Rotation[2], Rotation[3]);
+            item.PlaceableItemObject.transform.localScale = new Vector3(Scale[0], Scale[1], Scale[2]);
         }
     }
 }
