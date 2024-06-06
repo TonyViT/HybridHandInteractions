@@ -1183,6 +1183,7 @@ MonoBehaviour:
   m_planesCollidersThickness: 0.05
   m_planesCollidersLayer: 0
   m_addRenderers: 1
+  m_renderersMaterial: {fileID: 2100000, guid: e819382a8d329f54e8db1b47679b6b46, type: 2}
   m_localColliders:
   - {fileID: 1442053104}
   m_editorOnly: 1

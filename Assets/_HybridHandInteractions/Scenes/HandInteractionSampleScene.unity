@@ -1466,7 +1466,8 @@ MonoBehaviour:
   m_planeManager: {fileID: 1886335265}
   m_planesCollidersThickness: 0.05
   m_planesCollidersLayer: 0
-  m_addRenderers: 1
+  m_addRenderers: 0
+  m_renderersMaterial: {fileID: 0}
   m_localColliders: []
   m_editorOnly: 1
 --- !u!114 &57996031777820792

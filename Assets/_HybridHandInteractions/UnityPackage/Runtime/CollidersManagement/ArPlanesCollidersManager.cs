@@ -37,6 +37,15 @@ namespace HybridHandInteractions
         protected bool m_addRenderers = false;
 
         /// <summary>
+        /// If not null, the renderers of the planes will use this material
+        /// </summary>
+        /// <remarks>
+        /// This is necessary because the default material of the primitive cube doesn't show up in build
+        /// </remarks>
+        [SerializeField]
+        protected Material m_renderersMaterial;
+
+        /// <summary>
         /// Dictionary that maps the trackable id of the planes to the colliders created for them
         /// </summary>
         protected Dictionary<TrackableId, Collider> m_planesColliders = new Dictionary<TrackableId, Collider>();
@@ -111,6 +120,9 @@ namespace HybridHandInteractions
             //hide the renderer if requested
             if(!m_addRenderers)
                 planeColliderGO.GetComponent<MeshRenderer>().enabled = false;
+            else             
+                if (m_renderersMaterial != null)
+                    planeColliderGO.GetComponent<MeshRenderer>().material = m_renderersMaterial;            
 
             //adapt the collider to the plane
             AdaptColliderToPlane(planeCollider, plane);

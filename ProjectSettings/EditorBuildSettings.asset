@@ -5,10 +5,10 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
+  - enabled: 1
     path: Assets/_HybridHandInteractions/Scenes/HandPlacementSampleScene.unity
     guid: 075377bd9bc925e43ae16349833d5099
-  - enabled: 1
+  - enabled: 0
     path: Assets/_HybridHandInteractions/Scenes/HandInteractionSampleScene.unity
     guid: 41bc4a6a22fe58446b9a2861cdc8fd8a
   m_configObjects:
